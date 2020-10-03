@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+{% block mainbody %}
+
+<table border="1">
+    <tr id="tableHeader">
+        <th>SAP Id</th>
+        <th>Hostname</th>
+        <th>Loopback</th>
+        <th>MAC Addr</th>
+        <th>Active</th>
+    </tr>
+    {% for router in router_data %}
+    <tr class="tableBody">
+        <td>{{ router.sapid }}</td>
+        <td>{{ router.hostname }}</td>
+        <td>{{ router.loopback }}</td>
+        <td>{{ router.mac_addr }}</td>
+        <td>{{ router.active }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script type="text/javascript">
+    function home(){
+        window.location.href = BASE_URL + 'list/';
+    }
+</script>
+{% endblock %}

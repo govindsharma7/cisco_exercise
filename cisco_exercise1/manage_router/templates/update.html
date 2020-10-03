@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+{% block mainbody %}
+<form method="post" action="/update/">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td><label for="sapid">SAP Id:</label></td>
+            <td><input type="text" name="sapid" id="sapid" value="{{ router_data.sapid }}"></td>
+        </tr>
+        <tr>
+            <td><label for="sapid">Hostname:</label></td>
+            <td><input type="text" name="hostname" id="hostname" value="{{ router_data.hostname }}"></td>
+        </tr>
+        <tr>
+            <td><label for="sapid">Loopback:</label></td>
+            <td><input type="text" name="loopback" id="loopback" value="{{ router_data.loopback }}"></td>
+        </tr>
+        <tr>
+            <td><label for="sapid">MAC Address:</label></td>
+            <td><input type="text" name="mac_addr" id="mac_addr" value="{{ router_data.mac_addr }}"></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="hidden" name="id" value="{{ router_data.id }}">
+                <input type="submit" name="save_btn" value="UPDATE">
+            </td>
+            <td><input type="button" name="back_btn" value="BACK" onclick="home()"> </td>
+        </tr>
+    </table>
+</form>
+
+<script>
+    function home(){
+        window.location.href = BASE_URL + 'list/';
+    }
+</script>
+
+{% endblock %}

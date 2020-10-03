@@ -1,0 +1,90 @@
+{% extends "index.html" %}
+{% block mainbody %}
+<input type="text" name="search_text" id="search_text">
+<input type="button" value="Search" onclick="search()">
+<input type="button" value="Reset" onclick="home()">
+<table border="1">
+    <tr id="tableHeader">
+        <th>SAP Id</th>
+        <th>Hostname</th>
+        <th>Loopback</th>
+        <th>MAC Addr</th>
+        <th>Active</th>
+        <th>Action</th>
+    </tr>
+    {% for router in router_data %}
+    <tr class="tableBody">
+        <td>{{ router.sapid }}</td>
+        <td>{{ router.hostname }}</td>
+        <td>{{ router.loopback }}</td>
+        <td>{{ router.mac_addr }}</td>
+        <td>{{ router.active }}</td>
+        <td>
+            <a href="/get_details/{{router.id}}/">Update</a>
+            <a onclick="delete_details({{router.id}})" style="cursor: pointer;">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="3"><a href="/add/">Add</a></td>
+        <td colspan="3"><a href="/multiple/">Add Multiple</a></td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function home(){
+        window.location.href = BASE_URL + 'list/';
+    }
+
+    function delete_details(id){
+        var con = confirm("Are you sure you want to delete this record.");
+
+        if(con){
+            $.ajax({
+                url : BASE_URL + 'delete/',
+                data : {'id':id, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                method : 'post',
+                dataType: 'json',
+                success: function(resp){
+                    console.log('hereee');
+                    window.location.href = BASE_URL + 'list/';
+                }
+            });
+        }
+    }
+
+    function search(){
+        var search_text = $('#search_text').val();
+
+        $.ajax({
+            url : BASE_URL + 'search/',
+            data : {'search_text':search_text, 'csrfmiddlewaretoken': '{{csrf_token}}'},
+            method : 'post',
+            dataType : 'json',
+            success : function(resp){
+                console.log(resp.result);
+                if(resp.status == 1){
+                    newHtml = '';
+
+                    $.each(resp.result, function(k, val){
+                        newHtml += '<tr class="tableBody">\
+                                        <td>' + val.sapid + '</td>\
+                                        <td>' + val.hostname + '</td>\
+                                        <td>' + val.loopback + '</td>\
+                                        <td>' + val.mac_addr + '</td>\
+                                        <td>' + val.active + '</td>\
+                                        <td>\
+                                            <a href="/get_details/'+val.id+'/">Update</a>\
+                                            <a onclick="delete_details('+val.id+')" style="cursor: pointer;">Delete</a>\
+                                        </td>\
+                                    </tr>';
+                    });
+
+                    $('.tableBody').remove();
+                    $('#tableHeader').after(newHtml);
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

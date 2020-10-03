@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block mainbody %}
+
+
+<h1>Login</h1>
+
+<label for="username">username:</label> <input type="text" name="username" id="username">
+<label for="password">password:</label> <input type="password" name="password" id="password">
+<input type="button" value="Login" onclick="login()">
+
+<script>
+    function login(){
+        var search_text = $('#search_text').val();
+
+        var _data = {
+            'username': $('#username').val(),
+            'password': $('#password').val(),
+            'csrfmiddlewaretoken': '{{csrf_token}}'
+        }
+
+        $.ajax({
+            url : BASE_URL + 'api-token-auth/',
+            data : _data,
+            method : 'post',
+            dataType : 'json',
+            success : function(resp){
+                localStorage.setItem("token", resp.token);
+                window.location.href = BASE_URL + 'list/';
+            }
+        });
+    }
+</script>
+{% endblock %}
